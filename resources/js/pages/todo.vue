@@ -15,7 +15,7 @@
                     <br>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item" v-for="task in tasks">
-                            <input @click="updateDoneTask(task.id)"  type="checkbox" class="checkbox" :checked="task.status == 1 ? 'checked' : ''">
+                            <input @click="updateDoneTask(task.id)"  type="checkbox" class="checkbox" v-model="task.status">
                             <span :class="{iteamDone : task.status==1}" style="margin-left: 10px;">{{ task.task }}</span>
                             <div style="float: right;" class="btn-group">
                                 <a class="btn btn-primary btn-sm" href="#EditTask" @click="getByID(task.id)" data-toggle="modal"><i class="fa fa-edit"></i></a>
@@ -141,7 +141,7 @@ export default {
         updateDoneTask(id) {
            let Id = id
             axios.get(`http://127.0.0.1:8000/api/status/`+id,).then(response => {
-                this.tasks = []
+                
                 this.getTask();
             }).catch(error => {
                 console.log(error)

@@ -2051,8 +2051,6 @@ __webpack_require__.r(__webpack_exports__);
 
       var Id = id;
       axios.get("http://127.0.0.1:8000/api/status/" + id).then(function (response) {
-        _this3.tasks = [];
-
         _this3.getTask();
       })["catch"](function (error) {
         console.log(error);
@@ -31846,12 +31844,46 @@ var render = function() {
               _vm._l(_vm.tasks, function(task) {
                 return _c("li", { staticClass: "list-group-item" }, [
                   _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: task.status,
+                        expression: "task.status"
+                      }
+                    ],
                     staticClass: "checkbox",
                     attrs: { type: "checkbox" },
-                    domProps: { checked: task.status == 1 ? "checked" : "" },
+                    domProps: {
+                      checked: Array.isArray(task.status)
+                        ? _vm._i(task.status, null) > -1
+                        : task.status
+                    },
                     on: {
                       click: function($event) {
                         return _vm.updateDoneTask(task.id)
+                      },
+                      change: function($event) {
+                        var $$a = task.status,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = null,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              _vm.$set(task, "status", $$a.concat([$$v]))
+                          } else {
+                            $$i > -1 &&
+                              _vm.$set(
+                                task,
+                                "status",
+                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                              )
+                          }
+                        } else {
+                          _vm.$set(task, "status", $$c)
+                        }
                       }
                     }
                   }),
